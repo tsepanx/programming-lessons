@@ -8,8 +8,6 @@ class Node:
         self.r = r
 
     def find(self, key):
-        # print(self)
-
         if self.key == key:
             return self
 
@@ -19,11 +17,39 @@ class Node:
             return self.r.find(key)
 
     def find_ge(self, key):
-        if not self.r:
-            return arr
-
+        # import pdb; pdb.set_trace()
         if self.key == key:
-            return self.r.find_gr(key, arr)
+            return self
+
+        if not self.l and self.key > key:
+            return self
+
+        l_res, r_res = None, None
+
+        if self.r and key > self.key:
+            r_res = self.r.find_ge(key)
+
+        if self.l and key < self.key:
+            l_res = self.l.find_ge(key)
+
+
+        if l_res or r_res:
+            if l_res and r_res:
+
+                if l_res.key <= r_res:
+                    return l_res
+                else:
+                    return r_res
+            elif l_res:
+                return l_res
+            elif r_res:
+                return r_res
+
+        else:
+            if self.key >= key:
+                return self
+
+    
 
     def __str__(self):
         return f'{self.key} -> {self.l.key if self.l else None}, {self.r.key if self.r else None}'
@@ -49,4 +75,5 @@ root = gen_tree()
 # print(root)
 
 # print(root.get_all_children())
-print(root.find(6))
+# print(root.find(6))
+print(root.find_ge(6.5))
