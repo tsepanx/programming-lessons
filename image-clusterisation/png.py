@@ -58,7 +58,7 @@ def main():
     arr = list(map(without_alpha, im.getdata()))
 
 
-    # centers, colors = knn(arr, 5)
+    centers, colors = knn(arr, 5)
 
     def fill_with_centers(coords, centers, colors):
         res_coords = coords[:]
@@ -68,14 +68,21 @@ def main():
 
         return res_coords
 
-    # res_coords = fill_with_centers(arr, centers, colors)
-    res_coords = arr
+    def array_from_list(l):
+        # c = [[0] * k * im.width for i in range(k * im.height)]
+        # return np.asarray(c)
+        res = np.array([])
+        
 
-    print(res_coords[-1])
-    print(np.uint8(res_coords)[-1])
-    print(np.asarray(im))
-    print(len(arr))
-    res_img = Image.fromarray(np.uint8(res_coords))
+    res_coords = fill_with_centers(arr, centers, colors)
+    # res_coords = arr
+
+    res_coords = np.array([res_coords], dtype=np.uint8)
+    res_coords.resize((256, 256, 3))
+
+    print(res_coords.shape)
+
+    res_img = Image.fromarray(res_coords)
     res_img.show()
 
 main()
