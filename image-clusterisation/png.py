@@ -2,7 +2,10 @@ import random
 import numpy as np
 from PIL import Image
 
-def knn(coords, iterations_count, clusters_count=256, shape=3):
+CLUSTERS_COUNT = 64
+LOOPS_COUNT = 5
+
+def knn(coords, iterations_count, clusters_count=CLUSTERS_COUNT, shape=3):
     rand = lambda: random.randint(0, 30)
     rand_pos = lambda: [rand() for _ in range(shape)]
 
@@ -11,6 +14,8 @@ def knn(coords, iterations_count, clusters_count=256, shape=3):
     centers = [rand_pos() for _ in range(clusters_count)]
 
     for i in range(iterations_count):
+        print(i + 1, 'loop')
+
         # Update colors
         for j in range(points_count):
             min_dist = float('inf')
@@ -32,7 +37,7 @@ def knn(coords, iterations_count, clusters_count=256, shape=3):
 
             colors[j] = best_cent
 
-        print(i, 1)
+        print('Colors updated')
 
         # Update centers
         for j in range(clusters_count):
@@ -47,7 +52,7 @@ def knn(coords, iterations_count, clusters_count=256, shape=3):
             divide_list = lambda x: x / cnt
             centers[j] = list(map(divide_list, coords_sum)) if cnt else rand_pos()
 
-        print(i, 2)
+        print('Centers updated')
 
     return centers, colors
 
@@ -57,8 +62,7 @@ def main():
     without_alpha = lambda x: x[:-1]
     arr = list(map(without_alpha, im.getdata()))
 
-
-    centers, colors = knn(arr, 6)
+    centers, colors = knn(arr, LOOPS_COUNT)
 
     def fill_with_centers(coords, centers, colors):
         res_coords = coords[:]
@@ -68,14 +72,7 @@ def main():
 
         return res_coords
 
-    def array_from_list(l):
-        # c = [[0] * k * im.width for i in range(k * im.height)]
-        # return np.asarray(c)
-        res = np.array([])
-        
-
     res_coords = fill_with_centers(arr, centers, colors)
-    # res_coords = arr
 
     res_coords = np.array([res_coords], dtype=np.uint8)
     res_coords.resize((256, 256, 3))
