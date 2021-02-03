@@ -58,7 +58,7 @@ def main():
     arr = list(map(without_alpha, im.getdata()))
 
 
-    centers, colors = knn(arr, 5)
+    centers, colors = knn(arr, 6)
 
     def fill_with_centers(coords, centers, colors):
         res_coords = coords[:]
@@ -84,5 +84,6 @@ def main():
 
     res_img = Image.fromarray(res_coords)
     res_img.show()
+    res_img.save('result_png.png')
 
 main()
