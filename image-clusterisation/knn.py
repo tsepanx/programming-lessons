@@ -2,10 +2,16 @@ import random
 import numpy as np
 from PIL import Image
 
-CLUSTERS_COUNT = 64
-LOOPS_COUNT = 5
+def fill_with_centers(coords, centers, colors):
+    res_coords = coords[:]
+    for i in range(len(colors)):
+        cluster = centers[colors[i]]
+        res_coords[i] = cluster
 
-def knn(coords, iterations_count, clusters_count=CLUSTERS_COUNT, shape=3):
+    return res_coords
+
+
+def knn(coords, iterations_count, clusters_count, shape=3):
     rand = lambda: random.randint(0, 30)
     rand_pos = lambda: [rand() for _ in range(shape)]
 
@@ -55,32 +61,3 @@ def knn(coords, iterations_count, clusters_count=CLUSTERS_COUNT, shape=3):
         print('Centers updated')
 
     return centers, colors
-
-def main():
-    im = Image.open('lenna.png')
-
-    without_alpha = lambda x: x[:-1]
-    arr = list(map(without_alpha, im.getdata()))
-
-    centers, colors = knn(arr, LOOPS_COUNT)
-
-    def fill_with_centers(coords, centers, colors):
-        res_coords = coords[:]
-        for i in range(len(colors)):
-            cluster = centers[colors[i]]
-            res_coords[i] = cluster
-
-        return res_coords
-
-    res_coords = fill_with_centers(arr, centers, colors)
-
-    res_coords = np.array([res_coords], dtype=np.uint8)
-    res_coords.resize((256, 256, 3))
-
-    print(res_coords.shape)
-
-    res_img = Image.fromarray(res_coords)
-    res_img.show()
-    res_img.save('result_png.png')
-
-main()
