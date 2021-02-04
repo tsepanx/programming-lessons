@@ -8,6 +8,9 @@ def fill_with_centers(coords, centers, colors):
         cluster = centers[colors[i]]
         res_coords[i] = cluster
 
+    res_coords = np.array([res_coords], dtype=np.uint8)
+    res_coords.resize((256, 256, 3))
+
     return res_coords
 
 
